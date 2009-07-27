@@ -13,7 +13,7 @@ Syntax:
     format - the microformat you want to read (hcard, hresume, etc.)
 
     
-Outputs:
+Output:
 
     A pretty-printed representation of the parsed data.
     
