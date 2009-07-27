@@ -141,4 +141,4 @@ if __name__ == "__main__":
     tree = lxml.html.parse(sys.argv[1])
     formats = lxml.etree.parse(sys.argv[2])
     
-    pprint.pprint(Parser(tree, formats).parse_format(sys.argv[2]))
+    pprint.pprint(Parser(tree, formats).parse_format(sys.argv[3]))
