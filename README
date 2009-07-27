@@ -1,0 +1,23 @@
+Required libraries:
+
+    lxml (http://codespeak.net/lxml/)
+    isodate (http://pypi.python.org/pypi/isodate/)
+    
+
+Syntax:
+
+    python microtron.py [file] mf.xml [format]
+    
+    file - an xml or html file containing microformat data
+    mf.xml - the microformat definition file (default from http://microfomatique.com/optimus/)
+    format - the microformat you want to read (hcard, hresume, etc.)
+
+    
+Outputs:
+
+    A pretty-printed representation of the parsed data.
+    
+
+Questions:
+
+    Read the code, or go to http://github.com/amccollum/microtron/

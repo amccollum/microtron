@@ -28,7 +28,7 @@ class Parser(object):
             for feature in format:
                 attribute = feature.attrib['attribute']
                 value = node.tag
-                expr = '//*[contains(concat(" ", normalize-space(@%s), " "), " %s ")]' % (attribute, value)
+                expr = 'descendant-or-self::*[contains(concat(" ", normalize-space(@%s), " "), " %s ")]' % (attribute, value)
 
                 for node in root.xpath(expr):
                     values.append((value, node.href, node.text))

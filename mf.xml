@@ -1,3 +1,9 @@
+<!--
+    Optimus 0.8 - Microformats Transformer
+ 
+    Copyright (c) 2007 - 2009 Dmitry Baranovskiy (http://microfomatique.com/optimus/)
+    Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
+-->
 <microformats>
     <vcard type="compound" name="hcard">
         <adr many="many" type="adr"/>
