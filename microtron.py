@@ -27,11 +27,11 @@ class Parser(object):
         elif format.attrib['type'] == 'elemental':
             for feature in format:
                 attribute = feature.attrib['attribute']
-                value = node.tag
+                value = feature.tag
                 expr = 'descendant-or-self::*[contains(concat(" ", normalize-space(@%s), " "), " %s ")]' % (attribute, value)
 
                 for node in root.xpath(expr):
-                    values.append((value, node.href, node.text))
+                    values.append((value, node.attrib['href'], node.text))
 
         return results
         
