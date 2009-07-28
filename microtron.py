@@ -35,7 +35,7 @@ class Parser(object):
 
         return results
         
-    def _parse_node(self, node, format, nested=[]):
+    def _parse_node(self, node, format):
         result = {}
         for prop in format:
             prop_name = prop.tag
