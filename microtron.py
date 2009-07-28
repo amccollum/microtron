@@ -62,7 +62,7 @@ class Parser(object):
                 try:
                     for mf in prop_couldbe:
                         try:
-                            value = self.parse(mf, prop_node)[0]
+                            value = self.parse_format(mf, prop_node)[0]
                             if value:
                                 break
                         except:
