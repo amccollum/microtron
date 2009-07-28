@@ -42,7 +42,7 @@ class Parser(object):
             prop_type = prop.attrib['type'] if 'type' in prop.attrib else None
             prop_mandatory = True if 'mandatory' in prop.attrib and prop.attrib['mandatory'] == 'yes' else False
             prop_many = prop.attrib['many'] if 'many' in prop.attrib else False
-            prop_couldbe = set(prop.attrib['couldbe'].split('|')) if 'couldbe' in prop.attrib else []
+            prop_couldbe = prop.attrib['couldbe'].split('|') if 'couldbe' in prop.attrib else []
             prop_values = set(prop.attrib['values'].split(',')) if 'values' in prop.attrib else None
 
             # Select all properties, but exclude nested properties
