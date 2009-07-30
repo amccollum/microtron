@@ -22,7 +22,7 @@ Required libraries:
 
 Syntax:
 
-    python microtron.py [file] mf.xml [format]
+    python parse.py <file> mf.xml <format>
     
     file - an xml or html file containing microformat data
     mf.xml - the microformat definition file (default from http://microformatique.com/optimus/)
