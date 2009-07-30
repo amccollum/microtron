@@ -30,7 +30,7 @@ class Parser(object):
                 expr = 'descendant-or-self::*[contains(concat(" ", normalize-space(@%s), " "), " %s ")]' % (attribute, value)
 
                 for node in root.xpath(expr):
-                    values.append((value, node.attrib['href'], node.text))
+                    results.append((value, node.attrib['href'], node.text))
 
         return results
         
