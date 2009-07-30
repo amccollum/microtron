@@ -25,7 +25,7 @@ Syntax:
     python microtron.py [file] mf.xml [format]
     
     file - an xml or html file containing microformat data
-    mf.xml - the microformat definition file (default from http://microfomatique.com/optimus/)
+    mf.xml - the microformat definition file (default from http://microformatique.com/optimus/)
     format - the microformat you want to read (hcard, hresume, etc.)
 
     
