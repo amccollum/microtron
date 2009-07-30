@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import lxml.etree, lxml.html
 from optparse import OptionParser
 import os
