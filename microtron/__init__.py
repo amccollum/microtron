@@ -1,5 +1,4 @@
 import isodate, re
-import lxml.etree, lxml.html
 
 class ParseError(Exception):
     pass
@@ -169,11 +168,3 @@ class Parser(object):
     def _parse_text(self, node):
         text_expr = 'normalize-space(string(.))'
         return node.xpath(text_expr)
-
-
-if __name__ == "__main__":
-    import pprint, sys
-    tree = lxml.html.parse(sys.argv[1])
-    formats = lxml.etree.parse(sys.argv[2])
-    
-    pprint.pprint(Parser(tree, formats, strict=False).parse_format(sys.argv[3]))

@@ -1,3 +1,19 @@
+Author:
+
+    Andrew McCollum <amccollum@gmail.com>
+
+
+Install:
+
+    With easy_install:
+    $ sudo easy_install microtron
+
+    or by hand:
+    $ git clone git://github.com/amccollum/microtron.git
+    $ cd microtron
+    $ sudo python setup.py install
+
+
 Required libraries:
 
     lxml (http://codespeak.net/lxml/)
@@ -6,10 +22,10 @@ Required libraries:
 
 Syntax:
 
-    python microtron.py [file] mf.xml [format]
+    python parse.py <file> mf.xml <format>
     
     file - an xml or html file containing microformat data
-    mf.xml - the microformat definition file (default from http://microfomatique.com/optimus/)
+    mf.xml - the microformat definition file (default from http://microformatique.com/optimus/)
     format - the microformat you want to read (hcard, hresume, etc.)
 
     
