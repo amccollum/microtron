@@ -31,12 +31,12 @@ class Parser(object):
                 expr = 'descendant-or-self::*[contains(concat(" ", normalize-space(@%s), " "), " %s ")]' % (attribute, value)
 
                 for node in root.xpath(expr):
-                    values.append((value, node.attrib['href'], node.text))
+                    results.append({'__type__': mf, 'value': value, 'href': node.attrib['href'], 'text': node.text})
 
         return results
         
     def _parse_node(self, node, format):
-        result = {}
+        result = {'__type__': format.tag}
         for prop in format:
             prop_name = prop.tag
             prop_type = prop.attrib['type'] if 'type' in prop.attrib else None
@@ -60,30 +60,70 @@ class Parser(object):
 
             for prop_node in prop_nodes:
                 try:
+                    # Check if this prop_node is one or more of the possible "could be" formats
+                    value = {}
                     for mf in prop_couldbe:
                         try:
-                            value = self.parse_format(mf, prop_node)[0]
-                            if value:
-                                break
+                            results = self.parse_format(mf, prop_node)
+                            if results and len(results[0]) > 1:
+                                if '__type__' in value:
+                                    value['__type__'] += ' ' + results[0].pop('__type__')
+                                    
+                                value.update(results[0])
+
                         except:
                             pass
-                        
-                    else:
-                        if len(prop):
-                            value = self._parse_node(prop_node, prop)
-                            if not value:
-                                value = self._parse_value(prop_node)
-                     
-                        elif not prop_type or prop_type in ('text', 'url', 'image'):
-                            value = self._parse_value(prop_node)
-            
-                        elif prop_type == 'date':
-                            value = isodate.parse_date(self._parse_value(prop_node))
                     
+                    if len(prop):
+                        try:
+                            result = self._parse_node(prop_node, prop)
+                            if len(result) > 1:
+                                if '__type__' in value:
+                                    value['__type__'] += ' ' + results[0].pop('__type__')
+                            
+                                value.update(results[0])
+                        except:
+                            pass
+         
+                    if not value:
+                        value['__type__'] = prop_type
+                        if not prop_type or prop_type == 'text':
+                            value = self._parse_value(prop_node)
+    
+                        elif prop_type == 'url':
+                            value['text'] = self._parse_text(prop_node)
+                            if 'href' in node.attrib:
+                                value['href'] = node.attrib['href']
+                                for prefix in ('mailto', 'tel', 'fax', 'modem'):
+                                    if value['href'].startswith(prefix + ':'):
+                                        value[prefix] = value['href'][len(prefix + ':'):]
+                        
+                        elif prop_type == 'image':
+                            if 'title' in node.attrib:
+                                value['title'] = node.attrib['title']
+                                
+                            if 'alt' in node.attrib:
+                                value['alt'] = node.attrib['alt']
+                                
+                            if 'src' in node.attrib:
+                                value['src'] = node.attrib['src']
+    
+                        elif prop_type == 'object':
+                            value['text'] = self._parse_text(prop_node)
+                            if 'data' in node.attrib:
+                                value['data'] = node.attrib['data']
+                                
+                        elif prop_type == 'date':
+                            value['text'] = self._parse_text(prop_node)
+                            value['date'] = isodate.parse_date(self._parse_value(prop_node))
+            
                         else:
-                            value = self.parse_format(prop_type, prop_node)[0]
-                            if not value:
-                                value = self._parse_value(prop_node)
+                            results = self.parse_format(prop_type, prop_node)
+                            if results and len(results[0]) > 1:
+                                value = results[0]
+                                                  
+                            else:
+                                raise ParseError("Could not parse expected format: %s" % prop_type)
                 
                 except Exception, e:
                     if self.strict:
@@ -96,8 +136,13 @@ class Parser(object):
             
                 if prop_many == 'many':
                     values.append(value)
-                elif prop_many == 'manyasone':
+            
+                elif prop_many == 'manyasone' and isinstance(value, basestring):
+                    if values and 'separator' in prop.attrib:
+                        values += prop.attrib['separator']
+                        
                     values += value
+                    
                 else:
                     result[prop_name] = value
                     break
@@ -106,34 +151,24 @@ class Parser(object):
                 result[prop_name] = values
             
         return result
-        
+    
     def _parse_value(self, node):
+        text_expr = 'normalize-space(string(.))'
         value_expr = 'descendant::*[contains(concat(" ", normalize-space(@class), " "), " value ")]'
         value_nodes = node.xpath(value_expr)
 
         if value_nodes:
-            return self._normalize_space(" ".join(value_node.text_content() for value_node in value_nodes))
+            return self._parse_text(" ".join(value_node.xpath(text_expr) for value_node in value_nodes))
             
         elif node.tag == 'abbr' and 'title' in node.attrib:
             return node.attrib['title']
         
-        elif 'href' in node.attrib:
-            href = node.attrib['href']
-            for prefix in ('mailto:', 'tel:', 'fax:', 'modem:'):
-                if href.startswith(prefix):
-                    href = href[len(prefix):]
-                    break
-            
-            return (href, self._normalize_space(node.text_content()))
-            
-        elif 'src' in node.attrib:
-            return node.attrib['src']
-        
         else:
-            return self._normalize_space(node.text_content())
-    
-    def _normalize_space(self, text):
-        return re.sub(r'\s+', ' ', text.strip())
+            return node.xpath(text_expr)
+
+    def _parse_text(self, node):
+        text_expr = 'normalize-space(string(.))'
+        return node.xpath(text_expr)
 
 
 if __name__ == "__main__":
@@ -141,4 +176,4 @@ if __name__ == "__main__":
     tree = lxml.html.parse(sys.argv[1])
     formats = lxml.etree.parse(sys.argv[2])
     
-    pprint.pprint(Parser(tree, formats).parse_format(sys.argv[3]))
+    pprint.pprint(Parser(tree, formats, strict=False).parse_format(sys.argv[3]))

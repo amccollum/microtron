@@ -142,7 +142,10 @@
     <hresume type="compound">
         <affiliation type="vcard" many="many"/>
         <contact type="vcard" mandatory="yes"/>
-        <education type="vevent" many="many"/>
+        <education couldbe="vevent" many="many">
+            <degree type="text"/>
+            <major type="text"/>
+        </education>
         <experience type="vevent" many="many"/>
         <publication type="citation" many="many"/>
         <skill many="many"/>
