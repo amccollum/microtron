@@ -136,11 +136,12 @@ class Parser(object):
                 if prop_many == 'many':
                     values.append(value)
             
-                elif prop_many == 'manyasone' and isinstance(value, basestring):
-                    if values and 'separator' in prop.attrib:
-                        values += prop.attrib['separator']
+                elif prop_many == 'manyasone':
+                    if isinstance(value, basestring):
+                        if values and 'separator' in prop.attrib:
+                            values += prop.attrib['separator']
                         
-                    values += value
+                        values += value
                     
                 else:
                     result[prop_name] = value
