@@ -63,10 +63,10 @@ class Parser(object):
                     value = {}
                     for mf in prop_couldbe:
                         try:
-                            results = self.parse_format(mf, prop_node)
-                            if results and len(results[0]) > 1:
+                            format_results = self.parse_format(mf, prop_node)
+                            if format_results and len(format_results[0]) > 1:
                                 if '__type__' in value:
-                                    value['__type__'] += ' ' + results[0].pop('__type__')
+                                    value['__type__'] += ' ' + format_results[0].pop('__type__')
                                     
                                 value.update(results[0])
 
@@ -75,12 +75,12 @@ class Parser(object):
                     
                     if len(prop):
                         try:
-                            result = self._parse_node(prop_node, prop)
-                            if len(result) > 1:
+                            prop_result = self._parse_node(prop_node, prop)
+                            if len(prop_result) > 1:
                                 if '__type__' in value:
-                                    value['__type__'] += ' ' + results[0].pop('__type__')
+                                    value['__type__'] += ' ' + prop_result.pop('__type__')
                             
-                                value.update(results[0])
+                                value.update(prop_result)
                         except:
                             pass
          
@@ -91,26 +91,27 @@ class Parser(object):
     
                         elif prop_type in ('url', 'email'):
                             value['text'] = self._parse_text(prop_node)
-                            if 'href' in node.attrib:
-                                value['href'] = node.attrib['href']
+                            if 'href' in prop_node.attrib:
+                                value['href'] = prop_node.attrib['href']
                                 for prefix in ('mailto', 'tel', 'fax', 'modem'):
-                                    if value['href'].startswith(prefix + ':'):
+                                    if value['href'].lower().startswith(prefix + ':'):
                                         value[prefix] = value['href'][len(prefix + ':'):]
+                                        break
                         
                         elif prop_type == 'image':
-                            if 'title' in node.attrib:
-                                value['title'] = node.attrib['title']
+                            if 'title' in prop_node.attrib:
+                                value['title'] = prop_node.attrib['title']
                                 
-                            if 'alt' in node.attrib:
-                                value['alt'] = node.attrib['alt']
+                            if 'alt' in prop_node.attrib:
+                                value['alt'] = prop_node.attrib['alt']
                                 
-                            if 'src' in node.attrib:
-                                value['src'] = node.attrib['src']
+                            if 'src' in prop_node.attrib:
+                                value['src'] = prop_node.attrib['src']
     
                         elif prop_type == 'object':
                             value['text'] = self._parse_text(prop_node)
-                            if 'data' in node.attrib:
-                                value['data'] = node.attrib['data']
+                            if 'data' in prop_node.attrib:
+                                value['data'] = prop_node.attrib['data']
                                 
                         elif prop_type == 'date':
                             value['text'] = self._parse_text(prop_node)
