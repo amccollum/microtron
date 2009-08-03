@@ -89,7 +89,7 @@ class Parser(object):
                         if not prop_type or prop_type == 'text':
                             value = self._parse_value(prop_node)
     
-                        elif prop_type == 'url':
+                        elif prop_type in ('url', 'email'):
                             value['text'] = self._parse_text(prop_node)
                             if 'href' in node.attrib:
                                 value['href'] = node.attrib['href']
