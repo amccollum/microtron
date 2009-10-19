@@ -32,10 +32,12 @@ setup(
     author_email='amccollum@gmail.com',
     license='MIT',
     url='http://github.com/amccollum/microtron',
-    packages=find_packages(exclude=['ez_setup']),
-    zip_safe=False,
-    install_requires=[
-        'lxml',
-        'isodate',
+
+    install_requires = [
+        'lxml >= 2.2.2',
+        'isodate >= 0.4.0',
         ],
+    package_data = {'': ['*.xml']},
+    packages = find_packages(exclude=['ez_setup']),
+    zip_safe = False,
     )
