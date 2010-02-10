@@ -17,6 +17,7 @@ def parse(argv = None):
     options, arguments = parser.parse_args(argv[1:])
     if len(arguments) != 3:
         parser.error('Incorrect number of arguments')
+        
     source_filename = os.path.abspath(arguments[0])
     formats_filename = os.path.abspath(arguments[1])
     format = arguments[2]
