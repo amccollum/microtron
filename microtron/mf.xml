@@ -73,7 +73,7 @@
     </hfeed>
     <hentry type="compound">
         <author type="vcard" many="many" mandatory="yes"/>
-        <bookmark attribute="rel" mandatory="yes" type="url"/>
+        <bookmark attribute="rel" type="url"/>
         <tag attribute="rel" many="many"/>
         <entry-title mandatory="yes" type="text"/>
         <entry-content many="manyasone" separator=" " type="text"/>
