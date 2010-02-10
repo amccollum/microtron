@@ -81,6 +81,21 @@
         <published type="date"/>
         <updated mandatory="yes" type="date"/>
     </hentry>
+    <hnews type="compound">
+        <author type="vcard" many="many" mandatory="yes"/>
+        <bookmark attribute="rel" type="url"/>
+        <tag attribute="rel" many="many"/>
+        <entry-title mandatory="yes" type="text"/>
+        <entry-content many="manyasone" separator=" " type="text"/>
+        <entry-summary many="manyasone" separator=" " type="text"/>
+        <published type="date"/>
+        <updated mandatory="yes" type="date"/>
+        <principles attribute="rel" type="url" />
+        <item-license attribute="rel" type="url" />
+        <license attribute="rel" type="url" />
+        <dateline couldbe="vcard|text" />
+        <geo type="geo"/>
+    </hnews>
     <hreview type="compound">
         <best/>
         <description type="text"/>
