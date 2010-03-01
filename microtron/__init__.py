@@ -12,8 +12,7 @@ class Parser(object):
         self.formats = formats
         self.strict = strict
         if not formats:
-            print __file__
-            path = os.path.abspath(os.path.split(__file__)[0])
+            path = os.path.abspath(os.path.dirname(__file__))
             fname = os.path.join(path, 'mf.xml')
             self.formats = lxml.etree.parse(fname)
 
