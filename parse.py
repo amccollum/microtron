@@ -13,17 +13,15 @@ def parse(argv = None):
     if argv is None:
         argv = sys.argv
 
-    parser = OptionParser('usage: %prog <file> mf.xml <format>')
+    parser = OptionParser('usage: %prog <file> <format>')
     options, arguments = parser.parse_args(argv[1:])
-    if len(arguments) != 3:
+    if len(arguments) != 2:
         parser.error('Incorrect number of arguments')
     source_filename = os.path.abspath(arguments[0])
-    formats_filename = os.path.abspath(arguments[1])
-    format = arguments[2]
+    format = arguments[1]
 
     tree = lxml.html.parse(source_filename)
-    formats = lxml.etree.parse(formats_filename)
-    pprint.pprint(Parser(tree, formats).parse_format(format))
+    pprint.pprint(Parser(tree).parse_format(format))
 
 if __name__ == '__main__':
     sys.exit(parse())

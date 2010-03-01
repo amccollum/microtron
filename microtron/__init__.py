@@ -1,15 +1,21 @@
 __import__('pkg_resources').declare_namespace(__name__)
 
-import isodate, re
+import isodate, re, os
+import lxml.etree
 
 class ParseError(Exception):
     pass
 
 class Parser(object):
-    def __init__(self, tree, formats, strict=False):
+    def __init__(self, tree, formats=None, strict=False):
         self.root = tree
         self.formats = formats
         self.strict = strict
+        if not formats:
+            print __file__
+            path = os.path.abspath(os.path.split(__file__)[0])
+            fname = os.path.join(path, 'mf.xml')
+            self.formats = lxml.etree.parse(fname)
 
     def parse_format(self, mf, root=None):
         root = root if root is not None else self.root
