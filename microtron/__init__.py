@@ -77,7 +77,7 @@ class Parser(object):
                                 if '__type__' in value:
                                     value['__type__'] += ' ' + format_results[0].pop('__type__')
 
-                                value.update(results[0])
+                                value.update(format_results[0])
 
                         except:
                             pass
@@ -163,18 +163,17 @@ class Parser(object):
         return result
 
     def _parse_value(self, node):
-        text_expr = 'normalize-space(string(.))'
         value_expr = 'descendant::*[contains(concat(" ", normalize-space(@class), " "), " value ")]'
         value_nodes = node.xpath(value_expr)
 
         if value_nodes:
-            return self._parse_text(" ".join(value_node.xpath(text_expr) for value_node in value_nodes))
+            return " ".join(self._parse_text(value_node) for value_node in value_nodes)
 
         elif node.tag == 'abbr' and 'title' in node.attrib:
             return node.attrib['title']
 
         else:
-            return node.xpath(text_expr)
+            return self._parse_text(node)
 
     def _parse_text(self, node):
         text_expr = 'normalize-space(string(.))'
