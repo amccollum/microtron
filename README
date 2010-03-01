@@ -22,10 +22,9 @@ Required libraries:
 
 Syntax:
 
-    python parse.py <file> mf.xml <format>
+    python parse.py <file> <format>
     
     file - an xml or html file containing microformat data
-    mf.xml - the microformat definition file (default from http://microformatique.com/optimus/)
     format - the microformat you want to read (hcard, hresume, etc.)
 
     
