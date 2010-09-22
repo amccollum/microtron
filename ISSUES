@@ -1,0 +1,15 @@
+- tags are handled wrong. Need links, and need tidying (special URL trimming required)
+- isodate.parse will parse "2010-101-25T11:44:00Z" without error
+- maybe should do a regex check on datetimes before calling isodate.parse...
+- should alter parser so calling code can just pass in a filename or url
+  (caller shouldn't be exposed to lxml needlessly)
+
+hNews-specific stuff:
+
+- source-org: need to implement nearest-in-parent algorithm
+- entry-content should be direct concatenation of elements - not just the stripped text (need to add a new type to uF descriptions?) applies to hatom too.
+- hNews required hnews _and_ hentry to be present. Need a way to check.
+
+fixed:
+- added datetime type (eg hNews published/updated)
+
