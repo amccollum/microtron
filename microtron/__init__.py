@@ -64,6 +64,7 @@ class Parser(object):
             parent_expr = 'ancestor::*[contains(concat(" ", normalize-space(@class), " "), " %s ")]' % format.tag
             prop_nodes = [prop_node for prop_node in node.xpath(prop_expr) if prop_node.xpath(parent_expr)[0] == node]
 
+            # missing something required?
             if self.strict and not prop_nodes and prop_mandatory:
                 err = ParseError("missing mandatory %s property: %s" % (format.tag, prop_name), node.sourceline )
                 if self.collect_errors:
@@ -77,6 +78,7 @@ class Parser(object):
             elif prop_many == "manyasone":
                 values = ""
 
+            # for each node matching the property we're looking for...
             for prop_node in prop_nodes:
                 try:
                     # Check if this prop_node is one or more of the possible "could be" formats
@@ -106,6 +108,7 @@ class Parser(object):
 
                     if not value:
                         value['__type__'] = prop_type
+                        value['__srcline__'] = prop_node.sourceline
                         if not prop_type or prop_type == 'text':
                             value = self._parse_value(prop_node)
 
