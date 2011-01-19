@@ -14,7 +14,7 @@ class TestHNews1(unittest.TestCase):
 
     def setUp(self):
         dirname = os.path.abspath(os.path.dirname(__file__))
-        source_filename = dirname + '/hnews1.html'
+        source_filename = dirname + '/examples/hnews1.html'
         self.tree = lxml.html.parse(source_filename)
         self.parser = Parser(self.tree)
 

@@ -12,8 +12,8 @@ class TestHCard(unittest.TestCase):
 
     def setUp(self):
         dirname = os.path.abspath(os.path.dirname(__file__))
-        source_filename = dirname + '/hcard.html'
-        formats_filename = dirname + '/../mf.xml'
+        source_filename = dirname + '/examples/hcard.html'
+        formats_filename = dirname + '/../microtron/mf.xml'
         self.tree = lxml.html.parse(source_filename)
         self.formats = lxml.etree.parse(formats_filename)
         self.parser = Parser(self.tree, self.formats)
@@ -32,8 +32,8 @@ class TestHCard2(unittest.TestCase):
 
     def setUp(self):
         dirname = os.path.abspath(os.path.dirname(__file__))
-        source_filename = dirname + '/hcard2.html'
-        formats_filename = dirname + '/../mf.xml'
+        source_filename = dirname + '/examples/hcard2.html'
+        formats_filename = dirname + '/../microtron/mf.xml'
         self.tree = lxml.html.parse(source_filename)
         self.formats = lxml.etree.parse(formats_filename)
         self.parser = Parser(self.tree, self.formats)
