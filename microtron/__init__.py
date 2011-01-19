@@ -3,14 +3,21 @@ __import__('pkg_resources').declare_namespace(__name__)
 import isodate, re, os
 import lxml.etree
 
+
 class ParseError(Exception):
-    pass
+    def __init__(self, message, sourceline=None):
+        Exception.__init__(self, message)
+        self.sourceline = sourceline
 
 class Parser(object):
-    def __init__(self, tree, formats=None, strict=False):
+    def __init__(self, tree, formats=None, strict=False, collect_errors=False):
+        # if collect_errors is True, exceptions will be trapped and
+        # accumulated in self.errors
         self.root = tree
         self.formats = formats
         self.strict = strict
+        self.collect_errors = collect_errors
+        self.errors = []
         if not formats:
             path = os.path.abspath(os.path.dirname(__file__))
             fname = os.path.join(path, 'mf.xml')
@@ -58,14 +65,21 @@ class Parser(object):
             parent_expr = 'ancestor::*[contains(concat(" ", normalize-space(@class), " "), " %s ")]' % format.tag
             prop_nodes = [prop_node for prop_node in node.xpath(prop_expr) if prop_node.xpath(parent_expr)[0] == node]
 
+            # missing something required?
             if self.strict and not prop_nodes and prop_mandatory:
-                raise ParseError("Missing mandatory property: %s" % (prop_name))
+                err = ParseError("missing mandatory %s property: %s" % (format.tag, prop_name), node.sourceline)
+                if self.collect_errors:
+                    self.errors.append(err)
+                    continue
+                else:
+                    raise err
 
             if prop_many == 'many':
                 values = []
             elif prop_many == 'manyasone':
                 values = ""
 
+            # for each node matching the property we're looking for...
             for prop_node in prop_nodes:
                 try:
                     # Check if this prop_node is one or more of the possible "could be" formats
@@ -96,6 +110,7 @@ class Parser(object):
 
                     if not value:
                         value['__type__'] = prop_type
+                        value['__srcline__'] = prop_node.sourceline
                         if not prop_type or prop_type == 'text':
                             value = self._parse_value(prop_node)
 
@@ -127,18 +142,26 @@ class Parser(object):
                             value['text'] = self._parse_text(prop_node)
                             value['date'] = isodate.parse_date(self._parse_value(prop_node))
 
+                        elif prop_type == 'datetime':
+                            value['text'] = self._parse_text(prop_node)
+                            value['datetime'] = isodate.parse_datetime(self._parse_value(prop_node))
+
                         else:
                             # Try to parse this property as a sub-format
                             results = self.parse_format(prop_type, prop_node)
                             if results and len(results[0]) > 1:
                                 value = results[0]
-
                             else:
-                                raise ParseError("Could not parse expected format: %s" % prop_type)
+                                raise Exception("Could not parse expected format: '%s'" % (prop_type,))
 
                 except Exception, e:
                     if self.strict:
-                        raise ParseError("Error parsing value for property %s: %s" % (prop_name, e))
+                        err = ParseError("Error parsing value for property '%s': %s" % (prop_name, e), sourceline=prop_node.sourceline)
+                        if self.collect_errors:
+                            self.errors.append(err)
+                            continue    # go on to next property
+                        else:
+                            raise err
                     else:
                         value = self._parse_value(prop_node)
 
@@ -151,7 +174,12 @@ class Parser(object):
                     value_text = ""
 
                 if self.strict and prop_values and value_text.lower() not in prop_values:
-                    raise ParseError("Invalid value for property %s: %s" % (prop_name, value))
+                    err = ParseError("Invalid value for property '%s': %s" % (prop_name, value))
+                    if self.collect_errors:
+                        self.errors.append(err)
+                        continue    # go on to next property
+                    else:
+                        raise err
 
                 if prop_many == 'many':
                     values.append(value)

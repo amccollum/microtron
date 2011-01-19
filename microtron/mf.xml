@@ -78,8 +78,8 @@
         <entry-title mandatory="yes" type="text"/>
         <entry-content many="manyasone" separator=" " type="text"/>
         <entry-summary many="manyasone" separator=" " type="text"/>
-        <published type="date"/>
-        <updated mandatory="yes" type="date"/>
+        <published type="datetime"/>
+        <updated mandatory="yes" type="datetime"/>
     </hentry>
     <hnews type="compound">
         <author type="vcard" many="many" mandatory="yes"/>
@@ -88,12 +88,13 @@
         <entry-title mandatory="yes" type="text"/>
         <entry-content many="manyasone" separator=" " type="text"/>
         <entry-summary many="manyasone" separator=" " type="text"/>
-        <published type="date"/>
-        <updated mandatory="yes" type="date"/>
+        <published type="datetime"/>
+        <updated mandatory="yes" type="datetime"/>
         <principles attribute="rel" type="url" />
         <item-license attribute="rel" type="url" />
         <license attribute="rel" type="url" />
         <dateline couldbe="vcard|text" />
+        <source-org type="vcard" mandatory="yes"/>
         <geo type="geo"/>
     </hnews>
     <hreview type="compound">
