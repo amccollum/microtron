@@ -142,7 +142,7 @@ class Parser(object):
 
                         elif prop_type == 'datetime':
                             value['text'] = self._parse_text(prop_node)
-                            value['date'] = isodate.parse_datetime(self._parse_value(prop_node))
+                            value['datetime'] = isodate.parse_datetime(self._parse_value(prop_node))
 
                         else:
                             # treat type as a full format

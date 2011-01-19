@@ -54,7 +54,7 @@ class TestHNews1(unittest.TestCase):
             'source-org': {'__type__': 'vcard',
                  'fn': 'Associated Press',
                  'org': ['Associated Press']},
-            'updated': {'date': datetime.datetime(2009, 4, 19, 18, 17, 29, 0, isodate.tzinfo.Utc()) }
+            'updated': {'datetime': datetime.datetime(2009, 4, 19, 18, 17, 29, 0, isodate.tzinfo.Utc()) }
         }]
 
         self.assertSubsetEqual( result, expected )
