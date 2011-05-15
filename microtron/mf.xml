@@ -150,6 +150,21 @@
         <sample attribute="rel" many="many" type="url"/>
         <title mandatory="yes" type="text"/>
     </haudio>
+    <hproduct type="compound">
+        <brand type="text"/>
+        <category couldbe="tag" many="many"/>
+        <price type="text"/>
+        <description type="text" many="manyasone"/>
+        <fn mandatory="yes"/>
+        <photo many="many" type="image"/>
+        <url type="url"/>
+        <review type="hreview" many="many" />
+        <listing type="hlisting" many="many" />
+        <identifier type="text">
+            <type type="text" />
+            <value type="text" />
+        </identifier>
+    </hproduct>
     <xfolkentry type="compound">
         <taggedlink mandatory="yes"/>
         <description many="many" type="text"/>
