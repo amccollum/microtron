@@ -201,23 +201,33 @@ class Parser(object):
         return result
 
     def _parse_value(self, node):
-        value_expr = 'descendant-or-self::*[contains(concat(" ", normalize-space(@class), " "), " value ")]'
-        value_title_expr = 'descendant-or-self::*[contains(concat(" ", normalize-space(@class), " "), " value-title ")]'
-        value_nodes = node.xpath(value_expr)
+        value_title_expr = 'descendant::*[contains(concat(" ", normalize-space(@class), " "), " value-title ")]'
+        value_expr = 'descendant::*[contains(concat(" ", normalize-space(@class), " "), " value ")]'
+
         value_title_nodes = node.xpath(value_title_expr)
+        value_nodes = node.xpath(value_expr)
 
-        # Check for various methods to override the tag text
-        if value_nodes:
-            return " ".join(self._parse_text(value_node) for value_node in value_nodes)
+        if not value_title_nodes or value_nodes:
+            value_nodes = [node]
 
-        elif value_title_nodes:
-            return " ".join(node.attrib['title'] for value_title_node in value_title_nodes)
+        result = []
+        for node in value_title_nodes:
+            if 'title' in node.attrib:
+                result.append(node.attrib['title'])
+                
+        for node in value_nodes:
+            if node.tag.lower() == 'img':
+                if 'alt' in node.attrib:
+                    result.append(node.attrib['alt'])
 
-        elif node.tag == 'abbr' and 'title' in node.attrib:
-            return node.attrib['title']
-
-        else:
-            return self._parse_text(node)
+            elif node.tag.lower() == 'abbr':
+                if 'title' in node.attrib:
+                    result.append(node.attrib['title'])
+                    
+            else:
+                result.append(self._parse_text(node))
+        
+        return "".join(result)
 
     def _parse_text(self, node):
         text_expr = 'normalize-space(string(.))'
