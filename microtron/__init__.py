@@ -201,12 +201,17 @@ class Parser(object):
         return result
 
     def _parse_value(self, node):
-        value_expr = 'descendant::*[contains(concat(" ", normalize-space(@class), " "), " value ")]'
+        value_expr = 'descendant-or-self::*[contains(concat(" ", normalize-space(@class), " "), " value ")]'
+        value_title_expr = 'descendant-or-self::*[contains(concat(" ", normalize-space(@class), " "), " value-title ")]'
         value_nodes = node.xpath(value_expr)
+        value_title_nodes = node.xpath(value_title_expr)
 
         # Check for various methods to override the tag text
         if value_nodes:
             return " ".join(self._parse_text(value_node) for value_node in value_nodes)
+
+        elif value_title_nodes:
+            return " ".join(node.attrib['title'] for value_title_node in value_title_nodes)
 
         elif node.tag == 'abbr' and 'title' in node.attrib:
             return node.attrib['title']

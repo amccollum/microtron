@@ -26,7 +26,7 @@ doc_lines = __doc__.split('\n')
 
 setup(
     name='Microtron',
-    version='0.13',
+    version='0.15',
     description='Microformats parser',
     author='Andrew McCollum',
     author_email='amccollum@gmail.com',
